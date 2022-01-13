@@ -3,13 +3,18 @@ var express = require("express");
 var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
+var bodyParser = require("body-parser");
+var session = require("express-session");
+var MongoStore = require("connect-mongo");
+var passport = require("passport");
 require("dotenv").config();
 
 var indexRouter = require("./routes/index");
-var usersRouter = require("./routes/users");
+var mongooseConnection = require("./config/database");
+
+var PORT = process.env.PORT;
 
 var app = express();
-var PORT = process.env.PORT;
 
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
@@ -20,9 +25,26 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
+//bodyParser
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+
+app.use(
+  session({
+    secret: "passport-tutorial",
+    cookie: { maxAge: 60000 },
+    resave: false,
+    store: MongoStore.create({ client: mongooseConnection.getClient() }),
+    saveUninitialized: false,
+  })
+);
+
+// passportjs
+require("./config/passport");
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use("/", indexRouter);
-app.use("/users", usersRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
@@ -41,6 +63,7 @@ app.use(function (err, req, res, next) {
 });
 
 app.listen(PORT, function () {
-  console.log("started website on http://localhost:"+PORT);
+  console.log("started website on http://localhost:" + PORT);
 });
+
 module.exports = app;
