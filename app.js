@@ -7,6 +7,7 @@ var bodyParser = require("body-parser");
 var session = require("express-session");
 var MongoStore = require("connect-mongo");
 var passport = require("passport");
+var flash = require('connect-flash');
 require("dotenv").config();
 
 var indexRouter = require("./routes/index");
@@ -28,6 +29,7 @@ app.use(express.static(path.join(__dirname, "public")));
 //bodyParser
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+app.use(flash());
 
 app.use(
   session({

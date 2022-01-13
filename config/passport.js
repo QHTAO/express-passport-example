@@ -7,12 +7,16 @@ const customFields = {
 };
 
 const verifyCallback = (username, password, done) => {
-  return done(null, {});
+  if (username === "abc" && password === "123456") {
+    return done(null, { username, password });
+  } else {
+    return done(null, false, { message: "用户名或密码错误." });
+  }
 };
 
 const strategy = new LocalStrategy(customFields, verifyCallback);
+passport.use(strategy); // 设置本地验证策略
 
-passport.use(strategy);
 passport.serializeUser((user, done) => {
   done(null, "user.id");
 });
