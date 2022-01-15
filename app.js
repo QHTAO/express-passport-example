@@ -14,7 +14,6 @@ var indexRouter = require("./routes/index");
 var mongooseConnection = require("./config/database");
 
 var PORT = process.env.PORT;
-
 var app = express();
 
 // view engine setup
@@ -36,7 +35,7 @@ app.use(
     secret: "passport-tutorial",
     cookie: { maxAge: 60000 },
     resave: false,
-    store: MongoStore.create({ client: mongooseConnection.getClient() }),
+    store: MongoStore.create({ client: mongooseConnection.getClient() }),  // 设置session的存储位置
     saveUninitialized: false,
   })
 );
