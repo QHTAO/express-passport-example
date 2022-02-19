@@ -3,10 +3,12 @@ var passport = require("passport");
 var authenticated = require("../middlewares/authenticated");
 var router = express.Router();
 
-/* GET home page. */
 router.get("/", authenticated, function (req, res, next) {
   res.render("index", { title: "Express" });
 });
+
+
+
 router.get("/login", function (req, res, next) {
   res.render("login", {
     title: "Login",
@@ -14,10 +16,10 @@ router.get("/login", function (req, res, next) {
   });
 });
 
-router.get('/logout', (req, res, next) => {
-  req.logout();
-  res.redirect('/login');
-});
+
+
+
+// 登录接口
 
 router.post(
   "/login",
@@ -27,5 +29,12 @@ router.post(
     failureFlash: true,
   })
 );
+
+// 登出接口
+
+router.get('/logout', (req, res, next) => {
+  req.logout();
+  res.redirect('/login');
+});
 
 module.exports = router;
